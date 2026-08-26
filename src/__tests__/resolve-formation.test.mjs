@@ -85,7 +85,18 @@ describe("resolveFormation", () => {
     expect(() => resolveFormation("does_not_exist")).toThrow(/Unknown formation id/);
   });
 
-  it("throws for unsupported rulesets rather than silently using FIBA coordinates", () => {
-    expect(() => resolveFormation("5_out", [], { ruleset: "nba" })).toThrow(/only 'fiba' is supported/);
+  it("resolves the same formation in nba units, different coordinates than fiba", () => {
+    const fiba = resolveFormation("5_out", [], { ruleset: "fiba" });
+    const nba = resolveFormation("5_out", [], { ruleset: "nba" });
+    const fibaPG = fiba.entities.find((e) => e.nr === 1);
+    const nbaPG = nba.entities.find((e) => e.nr === 1);
+    expect(fibaPG.y).toBeCloseTo(5.68, 2);
+    expect(nbaPG.y).toBeCloseTo(20.75, 2);
+  });
+
+  it("still defaults to fiba when no ruleset is given", () => {
+    const def = resolveFormation("5_out");
+    const fiba = resolveFormation("5_out", [], { ruleset: "fiba" });
+    expect(def.entities).toEqual(fiba.entities);
   });
 });

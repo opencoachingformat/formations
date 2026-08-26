@@ -18,7 +18,7 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@opencoachingformat/spec": "^1.0.0"
+    "@opencoachingformat/spec": "^1.1.0"
   },
   "devDependencies": {
     "vitest": "^4.1.11"
