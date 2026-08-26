@@ -24,10 +24,18 @@ import { loadPositions } from "@opencoachingformat/spec/positions/resolve-positi
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REGISTRY_DIR = resolve(__dirname, "..");
 
-function knownNamedFor(ruleset) {
-  // The set of valid named positions IS the key set of the spec's position
-  // data for that ruleset — single source of truth, no hand-maintained copy.
-  return new Set(Object.keys(loadPositions(ruleset)));
+// resolveFormation() can be called with any of these rulesets, so a registry
+// name is only safe if it resolves under ALL of them. Validate against the
+// intersection of every ruleset's position set, not just fiba — otherwise a
+// name that exists only in some rulesets would pass validation yet throw at
+// runtime under another. (Today the sets are identical; this stays correct if
+// a future spec release makes them diverge.)
+const RESOLVABLE_RULESETS = ["fiba", "nba", "ncaa", "nfhs"];
+
+function knownNamedIntersection() {
+  const sets = RESOLVABLE_RULESETS.map((r) => new Set(Object.keys(loadPositions(r))));
+  const [first, ...rest] = sets;
+  return new Set([...first].filter((name) => rest.every((s) => s.has(name))));
 }
 
 function validateRegistryFile(path, knownNamed) {
@@ -71,7 +79,7 @@ function validateRegistryFile(path, knownNamed) {
 function main() {
   let knownNamed;
   try {
-    knownNamed = knownNamedFor("fiba");
+    knownNamed = knownNamedIntersection();
   } catch (e) {
     console.error(`[validate-registry] Could not load spec positions: ${e.message}`);
     process.exit(1);

@@ -27,11 +27,13 @@
     "pretest": "npm run validate",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@opencoachingformat/spec": "^1.1.0"
+  },
   "peerDependencies": {
     "@opencoachingformat/spec": "^1.1.0"
   },
   "devDependencies": {
-    "@opencoachingformat/spec": "^1.1.0",
     "vitest": "^4.1.11"
   },
   "publishConfig": {
