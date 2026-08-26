@@ -62,10 +62,34 @@ const doc = {
 
 ```bash
 npm install
-npm run validate   # checks basketball-v1.json against a known named-position list
+npm run validate   # checks basketball-v1.json names against the spec's position data
 npm test           # runs the resolver test suite (also runs validate via pretest)
 ```
 
-Requires `@opencoachingformat/spec` resolvable via `require.resolve()` (as
-an installed peer dependency) or a sibling `../spec` checkout for local dev
-— same convention as `ocf-renderer`'s codegen script.
+Requires `@opencoachingformat/spec` (>=1.1.0) resolvable — installed as a dev
+dependency here, or a sibling `../spec` checkout for local dev. The resolver
+and the registry validator both read named-position data from that package
+(`resolveNamedPosition` / `loadPositions`), so there is no local coordinate
+copy to keep in sync.
+
+## Releasing
+
+Published to npm via GitHub Actions OIDC trusted publishing (no `NPM_TOKEN`),
+the same mechanism as `@opencoachingformat/spec`.
+
+1. **First release only** (one-time bootstrap): a maintainer runs
+   `npm publish --access public` once locally to create the package, then on
+   npmjs.com configures a **Trusted Publisher** for
+   `@opencoachingformat/formations`:
+   - Publisher: GitHub Actions
+   - Organization or user: `opencoachingformat` (the bare name, not a URL)
+   - Repository: `formations`
+   - Workflow filename: `release.yml`
+   - Environment name: leave blank
+2. **Thereafter**: bump `version` in `package.json`, commit, tag `vX.Y.Z`
+   (the tag MUST match `package.json` version), and push the tag. The workflow
+   runs the test suite and publishes. If a tag-triggered run gets stuck, you
+   can re-run manually with `gh workflow run release.yml --ref main`.
+
+`package.json` already carries the `repository.url` that npm provenance
+verification requires — omitting it causes an `E422` on publish.

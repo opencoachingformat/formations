@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  # Manual trigger: publish the current package.json version without a tag push
+  # (recovery path if a tag-triggered run gets stuck or trusted-publisher config
+  # is fixed after tagging). Publishes whatever package.json says on the ref.
+  workflow_dispatch:
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    name: Publish @opencoachingformat/formations to npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Trusted publishing needs npm CLI >=11.5.1; Node 22's bundled npm is
+      # older, so upgrade explicitly (same lesson as the spec package).
+      - name: Upgrade npm for OIDC trusted publishing support
+        run: npm install -g npm@latest
+
+      # On a tag push the tag must match package.json version. A manual
+      # workflow_dispatch run has no tag, so the check is skipped there.
+      - name: Check tag matches package.json version
+        if: github.event_name == 'push'
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::tag $VERSION does not match package.json version $PKG_VERSION"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests before publishing
+        run: npm test
+
+      # OIDC trusted publishing (no NPM_TOKEN). Requires a trusted publisher
+      # configured on npm for @opencoachingformat/formations pointing at this
+      # repo + this workflow file (.github/workflows/release.yml), and the
+      # package to already exist (a one-time manual `npm publish --access public`
+      # bootstraps it). package.json must carry a repository.url matching this
+      # repo or provenance verification fails with E422. Provenance is automatic.
+      - name: Publish to npm
+        run: npm publish
