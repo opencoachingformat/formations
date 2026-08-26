@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "description": "Standard basketball formation registry for Open Coaching Format (OCF) — offense and zone defense starting positions, resolvable to OCF entities.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opencoachingformat/formations.git"
+  },
+  "homepage": "https://opencoachingformat.org",
+  "bugs": {
+    "url": "https://github.com/opencoachingformat/formations/issues"
+  },
+  "license": "CC-BY-4.0",
   "main": "./src/resolve-formation.mjs",
   "exports": {
     ".": "./src/resolve-formation.mjs",
@@ -10,7 +19,8 @@
   },
   "files": [
     "basketball-v1.json",
-    "src/resolve-formation.mjs"
+    "src/resolve-formation.mjs",
+    "LICENSE"
   ],
   "scripts": {
     "validate": "node scripts/validate-registry.mjs",
@@ -21,6 +31,10 @@
     "@opencoachingformat/spec": "^1.1.0"
   },
   "devDependencies": {
+    "@opencoachingformat/spec": "^1.1.0",
     "vitest": "^4.1.11"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

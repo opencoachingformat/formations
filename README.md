@@ -16,42 +16,25 @@ concept, and the `based_on_formation` metadata shape).
 - **Registry data** (`basketball-v1.json`): 10 formations — 7 offense, 3 zone
   defense — all expressed via named positions, all validated against a
   known-good named-position list (`scripts/validate-registry.mjs`).
-- **Resolver** (`src/resolve-formation.mjs`): functional, tested (11/11),
-  but has one known gap — see "Known gap" below.
-- **`based_on_formation` schema field**: proposed in the RFC, **not yet
-  shipped in `schema/v1.json`**. A document produced by `resolveFormation()`
-  today validates cleanly if you drop `meta.based_on_formation` before
-  validating; once the schema PR from the RFC lands, drop that workaround.
+- **Resolver** (`src/resolve-formation.mjs`): resolves via
+  `@opencoachingformat/spec`'s `resolveNamedPosition(name, ruleset)` — no
+  duplicated coordinate table. Supports every ruleset the spec ships
+  (`fiba`, `nba`, `ncaa`, `nfhs`).
+- **`based_on_formation` schema field**: shipped in
+  `@opencoachingformat/spec` v1.1.0, so a document produced by
+  `resolveFormation()` validates as-is (no need to drop
+  `meta.based_on_formation`).
 
-## Known gap: named-position coordinates are duplicated, not imported
+## Named positions come from the spec, not a local copy
 
-`src/resolve-formation.mjs` contains a hardcoded `FIBA_NAMED_POSITIONS`
-table mirroring `docs/specification-v1.adoc`'s named-position catalog. This
-exists because `@opencoachingformat/spec` doesn't yet export a public
-named-position resolver function — only the raw JSON Schema, where
-`Coordinate.named` is typed as a plain `string`, not a schema `enum` (so
-there's nothing to import or generate types from for this specific piece).
-
-This is the same class of problem the `ocf-renderer` codegen fix addressed
-(a second, hand-maintained copy of schema-adjacent data), just not yet
-solvable the same way, because the source of truth for named positions
-currently lives in prose documentation, not in structured data the schema
-references. Two ways to close this gap, in order of preference:
-
-1. **Promote the named-position table to a small JSON data file in
-   `opencoachingformat/spec`** (e.g. `positions/fiba-v1.json`), the same way
-   this package promotes formations to data — then both `ocf-renderer` and
-   this package import it instead of each keeping a copy.
-2. Short of that, `@opencoachingformat/spec` exports a
-   `resolveNamedPosition(name, ruleset)` function, and this package's
-   `FIBA_NAMED_POSITIONS` constant is deleted in favor of calling it.
-
-Until one of those lands, treat `FIBA_NAMED_POSITIONS` here as a
-**deliberately flagged duplicate** — `scripts/validate-registry.mjs`
-validates registry *entries* reference real position names, but nothing yet
-guards this file's coordinate values against drifting from the spec's own
-table if that table changes. Update this file by hand alongside any change
-to the named-position catalog until the gap is closed properly.
+Coordinates are resolved through `@opencoachingformat/spec`'s
+`resolveNamedPosition(name, ruleset)` / `loadPositions(ruleset)`, backed by
+`positions/{fiba,nba,ncaa,nfhs}-v1.json` in the spec package. There is **no**
+`FIBA_NAMED_POSITIONS` table in this repo and no hand-maintained allowlist in
+`scripts/validate-registry.mjs` — both derive their data from the spec, so
+this package cannot drift from the spec's named-position catalog. (Earlier
+revisions carried a flagged duplicate; it was removed once the spec exported a
+public position resolver.)
 
 ## Usage
 
