@@ -1,0 +1,139 @@
+{
+  "$schema": "https://opencoachingformat.org/registry/formations/registry-schema-v1.json",
+  "registry_id": "basketball-v1",
+  "version": "1.0.0",
+  "sport": "basketball",
+  "description": "Standard basketball starting formations (offense and zone defense), expressed via FIBA named positions so they resolve correctly across rulesets.",
+  "formations": {
+    "5_out": {
+      "title": "5 Out",
+      "description": "All five offensive players positioned beyond the three-point line — including bigs who can shoot. Keeps the area under the basket completely open for drives and cuts.",
+      "category": "offense",
+      "tags": ["spacing", "drive-and-kick", "stretch-bigs"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 2, "named": "left_wing" },
+        { "type": "offense", "nr": 3, "named": "right_wing" },
+        { "type": "offense", "nr": 4, "named": "left_corner" },
+        { "type": "offense", "nr": 5, "named": "right_corner" }
+      ]
+    },
+    "4_out_1_in": {
+      "title": "4 Out, 1 In",
+      "description": "Four players spaced along the three-point line, one post player (usually the center) directly at the basket. The most commonly used modern formation — spacing for shooters plus a post/roll threat.",
+      "category": "offense",
+      "tags": ["spacing", "post-play", "modern"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 2, "named": "left_wing" },
+        { "type": "offense", "nr": 3, "named": "right_wing" },
+        { "type": "offense", "nr": 4, "named": "left_corner" },
+        { "type": "offense", "nr": 5, "named": "paint_center" }
+      ]
+    },
+    "3_out_2_in": {
+      "title": "3 Out, 2 In",
+      "description": "Three perimeter players and two post players. A classic, physical system where two bigs control the area under the basket for rebounds and close-range scoring.",
+      "category": "offense",
+      "tags": ["post-play", "classic", "rebounding"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 2, "named": "left_wing" },
+        { "type": "offense", "nr": 3, "named": "right_wing" },
+        { "type": "offense", "nr": 4, "named": "left_block" },
+        { "type": "offense", "nr": 5, "named": "right_block" }
+      ]
+    },
+    "horns": {
+      "title": "Horns",
+      "description": "Point guard with the ball up top; two bigs at the high post/elbows, two perimeter players in the corners. The layout resembles a bull's horns — a strong starting shape for quick ball-screen actions (pick and roll).",
+      "category": "offense",
+      "tags": ["pick-and-roll", "high-post", "modern"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 4, "named": "high_post_left" },
+        { "type": "offense", "nr": 5, "named": "high_post_right" },
+        { "type": "offense", "nr": 2, "named": "left_corner" },
+        { "type": "offense", "nr": 3, "named": "right_corner" }
+      ]
+    },
+    "princeton": {
+      "title": "Princeton",
+      "description": "Backdoor-cut-heavy motion offense built around high-post ball distribution. Starting shape has a big at the high post as a passing hub, with perimeter players spaced to read backdoor cuts.",
+      "category": "offense",
+      "tags": ["motion", "backdoor", "high-post"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 5, "named": "free_throw_line" },
+        { "type": "offense", "nr": 2, "named": "left_wing" },
+        { "type": "offense", "nr": 3, "named": "right_wing" },
+        { "type": "offense", "nr": 4, "named": "left_block" }
+      ]
+    },
+    "1_4_low": {
+      "title": "1-4 Low",
+      "description": "One ball handler up top, four players in a line along the baseline/blocks area. Common for baseline out-of-bounds plays and staggered-screen actions.",
+      "category": "offense",
+      "tags": ["blob", "screening", "classic"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 2, "named": "left_short_corner" },
+        { "type": "offense", "nr": 4, "named": "left_block" },
+        { "type": "offense", "nr": 5, "named": "right_block" },
+        { "type": "offense", "nr": 3, "named": "right_short_corner" }
+      ]
+    },
+    "1_4_high": {
+      "title": "1-4 High",
+      "description": "One ball handler up top, four players spaced along the elbow/free-throw-line-extended area. Common starting shape for double-screen and dribble-handoff actions.",
+      "category": "offense",
+      "tags": ["screening", "dribble-handoff", "classic"],
+      "entities": [
+        { "type": "offense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "offense", "nr": 2, "named": "left_wing" },
+        { "type": "offense", "nr": 4, "named": "high_post_left" },
+        { "type": "offense", "nr": 5, "named": "high_post_right" },
+        { "type": "offense", "nr": 3, "named": "right_wing" }
+      ]
+    },
+    "zone_2_3": {
+      "title": "2-3 Zone Defense",
+      "description": "Two defenders up top at the three-point line, three defenders across the baseline near the basket. Protects the paint but is vulnerable against good three-point shooting.",
+      "category": "defense",
+      "tags": ["zone", "paint-protection"],
+      "entities": [
+        { "type": "defense", "nr": 1, "named": "left_wing" },
+        { "type": "defense", "nr": 2, "named": "right_wing" },
+        { "type": "defense", "nr": 3, "named": "left_block" },
+        { "type": "defense", "nr": 4, "named": "paint_center" },
+        { "type": "defense", "nr": 5, "named": "right_block" }
+      ]
+    },
+    "zone_3_2": {
+      "title": "3-2 Zone Defense",
+      "description": "Three defenders up top, two defenders back near the basket. Pressures perimeter shooters but leaves the corners more open.",
+      "category": "defense",
+      "tags": ["zone", "perimeter-pressure"],
+      "entities": [
+        { "type": "defense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "defense", "nr": 2, "named": "left_wing" },
+        { "type": "defense", "nr": 3, "named": "right_wing" },
+        { "type": "defense", "nr": 4, "named": "left_block" },
+        { "type": "defense", "nr": 5, "named": "right_block" }
+      ]
+    },
+    "zone_1_3_1": {
+      "title": "1-3-1 Zone Defense",
+      "description": "One defender up top, three across the middle, one at the baseline. An aggressive variant meant to block passes into the middle and force turnovers.",
+      "category": "defense",
+      "tags": ["zone", "aggressive", "trapping"],
+      "entities": [
+        { "type": "defense", "nr": 1, "named": "top_of_the_key" },
+        { "type": "defense", "nr": 2, "named": "left_wing" },
+        { "type": "defense", "nr": 5, "named": "free_throw_line" },
+        { "type": "defense", "nr": 3, "named": "right_wing" },
+        { "type": "defense", "nr": 4, "named": "paint_center" }
+      ]
+    }
+  }
+}
