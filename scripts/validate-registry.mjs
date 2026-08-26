@@ -19,43 +19,15 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadPositions } from "@opencoachingformat/spec/positions/resolve-position.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REGISTRY_DIR = resolve(__dirname, "..");
 
-function resolveSchemaPath() {
-  try {
-    return require.resolve("@opencoachingformat/spec/schema/v1.json");
-  } catch {
-    return resolve(__dirname, "../../spec/schema/v1.json");
-  }
-}
-
-function extractNamedPositions(schema) {
-  // named positions are documented, not enumerated as a JSON Schema `enum`
-  // in schema/v1.json today (Coordinate.named is typed as `string` with
-  // the catalog living in docs/specification-v1.adoc). Until the schema
-  // itself exposes the catalog as data (recommended follow-up: promote the
-  // named-position table to a small JSON file the schema references, the
-  // same way this package promotes formations to data), this script reads
-  // an explicit allowlist mirrored from that table. Keep this list in sync
-  // with docs/specification-v1.adoc §"Named Position Catalog" by hand
-  // until that follow-up lands.
-  return new Set([
-    "basket",
-    "left_block", "right_block",
-    "paint_center",
-    "left_short_corner", "right_short_corner",
-    "left_elbow", "right_elbow",
-    "free_throw_line",
-    "high_post_left", "high_post_right",
-    "top_of_the_key",
-    "left_wing", "right_wing",
-    "left_corner", "right_corner",
-    "midcourt.center", "midcourt.left", "midcourt.right",
-    "inbound.baseline_left", "inbound.baseline_right", "inbound.baseline_center",
-    "inbound.sideline_left_fc", "inbound.sideline_right_fc",
-  ]);
+function knownNamedFor(ruleset) {
+  // The set of valid named positions IS the key set of the spec's position
+  // data for that ruleset — single source of truth, no hand-maintained copy.
+  return new Set(Object.keys(loadPositions(ruleset)));
 }
 
 function validateRegistryFile(path, knownNamed) {
@@ -97,17 +69,17 @@ function validateRegistryFile(path, knownNamed) {
 }
 
 function main() {
-  const schemaPath = resolveSchemaPath();
   let knownNamed;
   try {
-    const schema = JSON.parse(readFileSync(schemaPath, "utf-8"));
-    knownNamed = extractNamedPositions(schema);
+    knownNamed = knownNamedFor("fiba");
   } catch (e) {
-    console.error(`[validate-registry] Could not load schema at ${schemaPath}: ${e.message}`);
+    console.error(`[validate-registry] Could not load spec positions: ${e.message}`);
     process.exit(1);
   }
 
-  const files = readdirSync(REGISTRY_DIR).filter((f) => f.endsWith(".json") && f !== "package.json");
+  const files = readdirSync(REGISTRY_DIR).filter(
+    (f) => f.endsWith(".json") && f !== "package.json" && f !== "package-lock.json"
+  );
   let allErrors = [];
   for (const file of files) {
     const errors = validateRegistryFile(resolve(REGISTRY_DIR, file), knownNamed);
