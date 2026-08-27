@@ -28,10 +28,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@opencoachingformat/spec": "^1.1.0"
+    "@opencoachingformat/spec": "^1.1.1"
   },
   "peerDependencies": {
-    "@opencoachingformat/spec": "^1.1.0"
+    "@opencoachingformat/spec": "^1.1.1"
   },
   "devDependencies": {
     "vitest": "^4.1.11"
